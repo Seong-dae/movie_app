@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import Movie from './Movie';
-
+import "./App.css"
 class App extends React.Component{ 
   state = {
     isLoading: true,
@@ -12,7 +12,7 @@ class App extends React.Component{
     const {
       data: {
         data: { movies }
-      }
+      }  // YTS사이트 -> API -> List Movies 주소가져오고,, sorting까지!!
     } = await axios.get("https://yts-proxy.now.sh/list_movies.json?sort_by=rating")
     this.setState({movies, isLoading: false})
   }
@@ -27,20 +27,30 @@ class App extends React.Component{
   render(){
     const {isLoading, movies} = this.state; // es6문법! 
     return(
-      <div>
-        {isLoading ? "Loading..." : movies.map(movie =>{
-          return(
-            <Movie
-             key={movie.id}
-             id={movie.id}
-             year={movie.year}
-             title={movie.title}
-             summary={movie.summary}
-             poster={movie.medium_cover_image}
-           />
-          )
-        })}
-      </div>
+      <section>
+        {isLoading ? (
+          <div>
+            <span className="loader__text">Loading...</span>
+          </div>
+          ) : (
+            <div className="movies">
+              {movies.map(movie =>{
+              return(
+                <Movie
+                 key={movie.id}
+                 id={movie.id}
+                 year={movie.year}
+                 title={movie.title}
+                 summary={movie.summary}
+                 poster={movie.medium_cover_image}
+                 genres={movie.genres}
+               />
+              )
+            }
+            )}
+            </div>
+        )}
+      </section>
     )  
   }
 }
