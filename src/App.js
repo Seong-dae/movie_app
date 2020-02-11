@@ -1,59 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-const foodILike = [
-  {
-    id:1,
-    name: "kimchi",
-    image: "https://gbc-cdn-public-media.azureedge.net/img64004.1426x713.jpg",
-    rating: 5
-  },
-  {
-    id:2,
-    name: "bulgogi",
-    image: "https://cdn.shopify.com/s/files/1/0003/6188/9820/products/beef_bulgogi_0001_1200x1200.jpg?v=1536030333",
-    rating: 4.3
-  },{
-    id:3,
-    name: "hotdog",
-    image: "http://www.menupan.com/restaurant/restimg/001/zzmenuimg/f1011814_z.jpg",
-    rating: 5.6
-  },
-  {
-    id:4,
-    name: "gogi",
-    image: "http://static.hubzum.zumst.com/hubzum/2018/12/05/13/38035029939e44f3b76c6a0ddae80842.jpg",
-    rating: 4.7
-  },
-]
 
-function Food({name, picture, rating}){ // Food(props)     I like {props.name}
-  return (
-  <div>
-    <h2>I like {name}</h2>
-    <h4>{rating}/5.0</h4>
-    <img src={picture} alt={name}/>
-  </div>
-  )}
+//기존에 function App() 일때는 return을 저절로 가졌지만
+//class App로 바꾼 후에는 리액트 컴포넌트가 가지고있는 render함수를 써서 return해줌!
+//리액트는 자동적으로 class컴포넌트의 render메소드를 실행한다 !!!!!!!!!!
 
-Food.propTypes = {
-  name: PropTypes.string.isRequired,
-  picture: PropTypes.string.isRequired,
-  rating: PropTypes.number
+class App extends React.Component{ // 리액트컴포넌트!!!!
+  state = {//데이터가 변하기때문에 state를 사용함, state는 클래스컴포넌트의 기능
+    count: 0
+  }
+  //setState를통해서 페이지 새로고침이 아니라 render만 refresh해준다. 굿
+  add = () => {this.setState(current => ({count: current.count + 1}))} // current지원!
+
+  minus = () => {this.setState({count: this.state.count - 1})}
+
+  render(){
+    return(
+      <div>
+        <h1>The number is {this.state.count}</h1>
+        <button onClick={this.add}>Add</button>
+        <button onClick={this.minus}>Minus</button>
+      </div>
+    )  
+  }
 }
 
-function App() {
-  return (
-    <div className="App">
-      {foodILike.map(dish => (
-      <Food
-        key={dish.id}
-        name={dish.name}
-        picture={dish.image}
-        rating={dish.rating}/> //key값은 리액트 내부에서 필요로해서 해줘야댐 
-      ))}
-    </div>
-  );
-}
+
 
 export default App;
