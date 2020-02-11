@@ -1,39 +1,45 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import axios from 'axios';
+import Movie from './Movie';
 
+class App extends React.Component{ 
+  state = {
+    isLoading: true,
+    movies: []
+  }
 
-//기존에 function App() 일때는 return을 저절로 가졌지만
-//class App로 바꾼 후에는 리액트 컴포넌트가 가지고있는 render함수를 써서 return해줌!
-//리액트는 자동적으로 class컴포넌트의 render메소드를 실행한다 !!!!!!!!!!
+  getMovies = async() => { //axios 조금 오래걸림.. 그래서 await..!
+    const {
+      data: {
+        data: { movies }
+      }
+    } = await axios.get("https://yts-proxy.now.sh/list_movies.json?sort_by=rating")
+    this.setState({movies, isLoading: false})
+  }
 
-class App extends React.Component{ // 리액트컴포넌트!!!!
-  constructor(props){ // 렌더 이전에 호출됨. (순서 : constructor -> ~ -> render -> componentDidMount
-    super(props);
-    console.log("hello Im constructor")
-  }
-  state = {//데이터가 변하기때문에 state를 사용함, state는 클래스컴포넌트의 기능
-    count: 0
-  }
-  //setState를통해서 페이지 새로고침이 아니라 render만 refresh해준다. 굿
-  add = () => {this.setState(current => ({count: current.count + 1})); console.log("add!")} // current지원!
+  componentDidMount(){
+    this.getMovies()
 
-  minus = () => {this.setState({count: this.state.count - 1})}
-  componentDidMount(){ // render이후에 호출
-    console.log("component Mounted!!!!")
-  }
-  componentDidUpdate(){
-    console.log("componentDid Update!")
-  }
-  componentWillUnmount(){
-    console.log("good bye...")
+    // setTimeout(() => {  // 자바스크립트꺼임.. 오!
+    //   this.setState({isLoading: false});
+    // }, 6000); //6초 후에!
   }
   render(){
-    console.log("Im render")
+    const {isLoading, movies} = this.state; // es6문법! 
     return(
       <div>
-        <h1>The number is {this.state.count}</h1>
-        <button onClick={this.add}>Add</button>
-        <button onClick={this.minus}>Minus</button>
+        {isLoading ? "Loading..." : movies.map(movie =>{
+          return(
+            <Movie
+             key={movie.id}
+             id={movie.id}
+             year={movie.year}
+             title={movie.title}
+             summary={movie.summary}
+             poster={movie.medium_cover_image}
+           />
+          )
+        })}
       </div>
     )  
   }
