@@ -27,9 +27,9 @@ class App extends React.Component{
   render(){
     const {isLoading, movies} = this.state; // es6문법! 
     return(
-      <section>
+      <section className="container">
         {isLoading ? (
-          <div>
+          <div className="loader">
             <span className="loader__text">Loading...</span>
           </div>
           ) : (
